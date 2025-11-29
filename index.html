@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Links • LinkPage</title>
+
+  <!-- Custom fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-desktop: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1600&q=80');
+      --bg-mobile: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80');
+
+      --glass-bg: rgba(255,255,255,0.08);
+      --glass-border: rgba(255,255,255,0.12);
+      --accent: 220 90% 56%; /* H S% L% for hsl() lights in JS */
+      --text: #0f1724;
+      --muted: rgba(15,23,36,0.7);
+
+      --radius: 14px;
+      --transition: 300ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    /* Dark theme vars (applied to .dark on body) */
+    body.dark{
+      --glass-bg: rgba(12,14,18,0.36);
+      --glass-border: rgba(255,255,255,0.06);
+      --text: #e6eef8;
+      --muted: rgba(230,238,248,0.74);
+    }
+
+    /* Reset and global */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-color:#0b1220;
+      background-image:var(--bg-desktop);
+      background-position:center center;
+      background-size:cover;
+      background-repeat:no-repeat;
+      transition:background 600ms ease, color var(--transition);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px 24px;
+    }
+
+    /* Mobile background override */
+    @media (max-width:900px){
+      body{background-image:var(--bg-mobile); padding:28px 16px}
+    }
+
+    .wrap{
+      width:100%;
+      max-width:860px;
+      backdrop-filter: blur(8px) saturate(120%);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:24px;
+      padding:28px;
+      box-shadow: 0 10px 40px rgba(2,6,23,0.5);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    header{
+      display:flex;align-items:center;gap:16px;margin-bottom:20px;
+    }
+
+    .avatar{
+      width:86px;height:86px;border-radius:18px;overflow:hidden;flex:0 0 86px;box-shadow:0 6px 22px rgba(2,6,23,0.45);
+      border:1px solid var(--glass-border);
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .title{
+      display:flex;flex-direction:column;justify-content:center;gap:6px;
+    }
+    .title h1{font-family:'Cormorant Garamond', serif;margin:0;font-size:20px;letter-spacing:0.2px}
+    .title p{margin:0;color:var(--muted);font-size:13px}
+
+    /* toggle */
+    .controls{margin-left:auto;display:flex;align-items:center;gap:12px}
+    .switch{
+      --w:46px;--h:26px;display:inline-grid;place-items:center;width:var(--w);height:var(--h);background:rgba(255,255,255,0.06);border-radius:999px;padding:4px;border:1px solid var(--glass-border);cursor:pointer;transition:all var(--transition);
+    }
+    .switch .knob{width:18px;height:18px;border-radius:50%;background:white;transform:translateX(0);transition:transform var(--transition);box-shadow:0 4px 8px rgba(2,6,23,0.5)}
+    body.dark .switch{background:rgba(255,255,255,0.12)}
+    body.dark .switch .knob{transform:translateX(18px);background:#0b1220}
+
+    /* links area */
+    .links{display:flex;flex-direction:column;gap:12px}
+    .card{
+      display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;background:linear-gradient(180deg,var(--glass-bg), rgba(255,255,255,0.01));border:1px solid var(--glass-border);backdrop-filter: blur(6px);
+      transition:transform 220ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms ease, background 300ms ease;
+      text-decoration:none;color:inherit;overflow:hidden;position:relative;
+    }
+    .card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 18px 40px rgba(2,6,23,0.45)}
+
+    .card .icon{
+      width:44px;height:44px;border-radius:10px;display:grid;place-items:center;flex:0 0 44px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));
+    }
+    .card .meta{flex:1;display:flex;flex-direction:column}
+    .card .meta .label{font-weight:600}
+    .card .meta .sub{font-size:12px;color:var(--muted)}
+
+    /* badge */
+    .badge{font-size:11px;padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.06);border:1px solid rgba(255,255,255,0.04)}
+
+    /* hover highlight (animated gradient) */
+    .card::after{
+      content:'';position:absolute;inset:0;border-radius:12px;opacity:0;pointer-events:none;transition:opacity 360ms ease, transform 360ms ease;background:linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    }
+    .card:hover::after{opacity:1}
+
+    /* icons color shift in dark mode */
+    .card svg{width:22px;height:22px}
+
+    /* layout tweaks for mobile */
+    @media (max-width:560px){
+      .wrap{padding:18px;border-radius:18px}
+      .avatar{width:72px;height:72px;border-radius:12px}
+      .title h1{font-size:18px}
+      .card{padding:12px}
+      .card .icon{width:40px;height:40px}
+    }
+
+    /* small footer */
+    footer{display:flex;justify-content:center;margin-top:16px;color:var(--muted);font-size:13px}
+
+    /* subtle focus states */
+    a.card:focus{outline:3px solid rgba(200,210,255,0.12);outline-offset:3px}
+
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <header>
+      <div class="avatar" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=600&q=80" alt="Profile picture">
+      </div>
+      <div class="title">
+        <h1>Tejas Bale</h1>
+        <p>Designer • Podcaster • Night coder</p>
+      </div>
+
+      <div class="controls">
+        <div class="badge">Follow me</div>
+        <button class="switch" id="themeToggle" aria-pressed="false" aria-label="Toggle dark mode">
+          <span class="knob"></span>
+        </button>
+      </div>
+    </header>
+
+    <section class="links" aria-label="Social links">
+
+      <!-- Example link cards (replace hrefs) -->
+      <a class="card" href="#" target="_blank">
+        <div class="icon" aria-hidden="true">
+          <!-- Twitter SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22 5.92c-.63.28-1.3.48-2 .57.72-.43 1.28-1.12 1.54-1.94-.68.4-1.42.7-2.22.86A3.55 3.55 0 0016.9 4c-1.95 0-3.53 1.6-3.53 3.57 0 .28.03.55.09.81-2.94-.15-5.56-1.55-7.31-3.69-.31.54-.48 1.17-.48 1.84 0 1.27.65 2.39 1.64 3.05-.6-.02-1.17-.18-1.67-.46v.05c0 1.77 1.25 3.24 2.9 3.57-.3.08-.61.12-.94.12-.23 0-.46-.02-.68-.07.46 1.46 1.8 2.53 3.38 2.56A7.1 7.1 0 013 19.54 10.02 10.02 0 008.77 21c6.55 0 10.14-5.33 10.14-9.96v-.45c.7-.5 1.3-1.12 1.79-1.82-.64.28-1.32.47-2.03.55z"/></svg>
+        </div>
+        <div class="meta">
+          <div class="label">Twitter</div>
+          <div class="sub">@yourhandle</div>
+        </div>
+        <div class="badge">Follow</div>
+      </a>
+
+      <a class="card" href="#" target="_blank">
+        <div class="icon" aria-hidden="true">
+          <!-- Instagram SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 2a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H7zm5 3.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9zm0 2a2.5 2.5 0 100 5 2.5 2.5 0 000-5zM18.5 6a1 1 0 110 2 1 1 0 010-2z"/></svg>
+        </div>
+        <div class="meta">
+          <div class="label">Instagram</div>
+          <div class="sub">@yourhandle</div>
+        </div>
+        <div class="badge">Explore</div>
+      </a>
+
+      <a class="card" href="#" target="_blank">
+        <div class="icon" aria-hidden="true">
+          <!-- YouTube SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1-2.9-.2-7.3-.2-7.3-.2h-.1s-4.4 0-7.3.2c-.4.1-1.3.1-2.1 1C.7 4.6.5 6.2.5 6.2S.2 8 .2 9.8v.4c0 1.8.3 3.6.3 3.6s.2 1.6.8 2.3c.8.9 1.9.9 2.4 1 1.7.1 7.1.2 7.1.2s4.4 0 7.3-.2c.4-.1 1.3-.1 2.1-1 .6-.7.8-2.3.8-2.3s.3-1.8.3-3.6v-.4c0-1.8-.3-3.6-.3-3.6zM9.8 14.6V7.4l6.3 3.6-6.3 3.6z"/></svg>
+        </div>
+        <div class="meta">
+          <div class="label">YouTube</div>
+          <div class="sub">New episodes weekly</div>
+        </div>
+        <div class="badge">Watch</div>
+      </a>
+
+      <a class="card" href="#" target="_blank">
+        <div class="icon" aria-hidden="true">
+          <!-- Spotify SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a9 9 0 101 17.95V21a9 9 0 00-1-17.95zM8.8 9.6c3.6-2 8 0 8 0 .2.1.3.3.2.5-.1.2-.3.3-.5.2 0 0-3.9-1.5-7.7.2-.2.1-.4 0-.5-.2s0-.4.3-.7zM8.9 12.1c3.8-2 7.3-.5 7.3-.5.3.1.4.4.3.6-.1.3-.4.4-.6.3 0 0-3.1-1.1-6.6.3-.3.1-.6 0-.7-.4-.1-.2 0-.4.3-.3zM9.3 14.6c2.8-1.5 5.8-.5 5.8-.5.3.1.5.4.4.7-.1.3-.4.4-.7.3 0 0-2.4-.7-5 .3-.3.1-.5 0-.5-.5 0-.3.2-.4.0-.3z"/></svg>
+        </div>
+        <div class="meta">
+          <div class="label">Spotify</div>
+          <div class="sub">Listen to my mixes</div>
+        </div>
+        <div class="badge">Listen</div>
+      </a>
+
+      <a class="card" href="mailto:you@example.com">
+        <div class="icon" aria-hidden="true">
+          <!-- Mail SVG -->
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22 6.5v11a2 2 0 01-2 2H4a2 2 0 01-2-2v-11A2 2 0 014 4.5h16a2 2 0 012 2zM4 6.5l8 5 8-5"/></svg>
+        </div>
+        <div class="meta">
+          <div class="label">Email</div>
+          <div class="sub">you@example.com</div>
+        </div>
+        <div class="badge">Say hi</div>
+      </a>
+
+    </section>
+
+    <footer>Made with ❤️ • Glassy Link Page</footer>
+  </div>
+
+  <script>
+    /* Theme toggle with localStorage + smooth transition */
+    const body = document.body;
+    const btn = document.getElementById('themeToggle');
+
+    // Apply saved preference or system preference
+    const saved = localStorage.getItem('theme-mode');
+    if(saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)){
+      body.classList.add('dark');
+      btn.setAttribute('aria-pressed','true');
+    }
+
+    btn.addEventListener('click',()=>{
+      const isDark = body.classList.toggle('dark');
+      btn.setAttribute('aria-pressed', String(isDark));
+      localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+    });
+
+    // Smooth transition for theme/background toggles (adds class for duration then removes)
+    (function(){
+      let transitioning = false;
+      const TRANS_MS = 500;
+      function addTempTransition(){
+        if(transitioning) return;
+        transitioning = true;
+        body.style.transition = 'background '+TRANS_MS+'ms ease, color '+TRANS_MS+'ms ease';
+        setTimeout(()=>{body.style.transition='';transitioning=false}, TRANS_MS);
+      }
+      btn.addEventListener('click', addTempTransition);
+
+      // Optional: keyboard toggle (T key)
+      window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='t'){ btn.click(); }});
+    })();
+
+    // If you'd like to swap desktop/mobile background images dynamically (for SPA behaviour):
+    function updateBackground(){
+      const w = window.innerWidth;
+      // We set CSS variable on body for direct control
+      if(w <= 900){
+        document.documentElement.style.setProperty('--bg-mobile', getComputedStyle(document.documentElement).getPropertyValue('--bg-mobile'));
+      } else {
+        document.documentElement.style.setProperty('--bg-desktop', getComputedStyle(document.documentElement).getPropertyValue('--bg-desktop'));
+      }
+    }
+    window.addEventListener('resize', updateBackground);
+    updateBackground();
+  </script>
+</body>
+</html>
